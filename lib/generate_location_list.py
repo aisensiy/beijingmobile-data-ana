@@ -15,6 +15,8 @@ columns = ['user_id', 'location']
 
 df = pd.read_csv(input_file)
 
+df = df[df.longitude.notnull() & df.latitude.notnull()]
+
 def loc_column(row):
     return str(row['longitude']) + ' ' + str(row['latitude'])
 
