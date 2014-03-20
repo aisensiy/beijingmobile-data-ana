@@ -11,11 +11,12 @@ output_file = common.add_postfix(input_file, 'loclist')
 
 print 'From %s to %s' % (input_file, output_file)
 
-columns = ['user_id', 'location']
+columns = ['user_id', 'location', 'start_time']
 
 df = pd.read_csv(input_file)
 
-df = df[df.longitude.notnull() & df.latitude.notnull()]
+# drop null values on longitude latitude and start_time
+df = df[df.longitude.notnull() & df.latitude.notnull() & df.start_time.notnull()]
 
 def loc_column(row):
     return str(row['longitude']) + ' ' + str(row['latitude'])
@@ -28,15 +29,27 @@ df = df[columns]
 
 grouped = df.groupby('user_id')
 
-def rm_duplicated_location(locations):
-    newlocations = []
-    for location in locations:
-        if len(newlocations) == 0 or newlocations[-1] != location:
-            newlocations.append(location)
-    return ','.join(newlocations)
+result = grouped.agg({'user_id': 'max',
+    'location': lambda x: list(x),
+    'start_time': lambda x: list(x)})
 
-result = grouped.agg({'user_id': 'max', 'location': rm_duplicated_location})
-result['location_size'] = result['location'].map(lambda x: len(x.split(',')))
+print result.head()
+
+def zip_two_col_and_rm_duplicates(row):
+    locations = zip(row['start_time'], row['location'])
+    newlocations = []
+    for start_time, location in locations:
+        if len(newlocations) == 0 or newlocations[-1][1] != location:
+            newlocations.append((start_time, location))
+    newlocations.sort()
+    return ','.join(["%s:%s" % (time, loc) for time, loc in newlocations])
+
+result['locations'] = result.apply(zip_two_col_and_rm_duplicates, axis=1)
+print result['locations'].head()
+
+result['location_size'] = result['locations'].map(lambda x: len(x.split(',')))
+
+result = result[['user_id', 'locations', 'location_size']]
 
 print len(result)
 print result.head()
