@@ -15,9 +15,6 @@ columns = ['user_id', 'location', 'start_time']
 
 df = pd.read_csv(input_file)
 
-# drop null values on longitude latitude and start_time
-df = df[df.longitude.notnull() & df.latitude.notnull() & df.start_time.notnull()]
-
 def loc_column(row):
     return str(row['longitude']) + ' ' + str(row['latitude'])
 
