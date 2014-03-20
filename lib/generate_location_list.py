@@ -27,6 +27,9 @@ print df['location'].head()
 
 df = df[columns]
 
+# sort by user_id and start_time
+df = df.sort_index(by=['user_id', 'start_time'])
+
 grouped = df.groupby('user_id')
 
 result = grouped.agg({'user_id': 'max',

@@ -5,7 +5,9 @@ import pandas as pd
 import common
 import os
 
+# raw data of all logs
 filename = sys.argv[1]
+# min record length
 limit = int(sys.argv[2])
 dstfilename = common.add_postfix(filename, 'with_record_size_limit_' + sys.argv[2])
 
