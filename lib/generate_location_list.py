@@ -7,7 +7,7 @@ import pandas as pd
 # input is a raw log
 input_file = sys.argv[1]
 # output is a user list with locations order by time
-output_file = common.add_postfix(input_file, 'loclist')
+output_file = common.add_postfix(input_file, 'location_list')
 
 print 'From %s to %s' % (input_file, output_file)
 

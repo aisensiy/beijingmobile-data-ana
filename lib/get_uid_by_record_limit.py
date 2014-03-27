@@ -9,7 +9,7 @@ import os
 filename = sys.argv[1]
 # min record length
 limit = int(sys.argv[2])
-dstfilename = common.add_postfix(filename, 'with_record_size_limit_' + sys.argv[2])
+dstfilename = common.add_postfix(filename, 'by_record_limit_' + sys.argv[2])
 
 
 if __name__ == '__main__':

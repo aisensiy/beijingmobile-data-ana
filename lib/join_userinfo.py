@@ -9,7 +9,7 @@ input_file = sys.argv[1]
 # userinfo file
 userinfo_file = sys.argv[2]
 # output is a user list with locations order by time
-output_file = common.add_postfix(input_file, 'joineduser')
+output_file = common.add_postfix(input_file, 'join_userinfo')
 
 joinkey = 'user_id'
 usekeys = ['user_id',
