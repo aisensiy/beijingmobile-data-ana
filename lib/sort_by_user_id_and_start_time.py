@@ -16,7 +16,6 @@ def sort_by_user_id_and_start_time(df):
     df.columns = headers
 
     del df['logic_area_name']
-    del df['lac']
     del df['ci']
 
     # drop null values on longitude latitude and start_time
@@ -32,7 +31,7 @@ if __name__ == '__main__':
     # input is a raw unsorted log file
     input_file = sys.argv[1]
     # output is a log file sort by user_id and start_time
-    output_file = common.add_postfix(input_file, 'sort_by_user_id_and_start_time')
+    output_file = input_file
 
     df = pd.read_csv(input_file, header=None, na_values=[''])
     df = sort_by_user_id_and_start_time(df)
