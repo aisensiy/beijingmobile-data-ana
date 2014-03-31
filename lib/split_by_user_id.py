@@ -20,6 +20,9 @@ with open(inputfile, 'r') as ifile:
         # If the uid changed, close old file and open a new one
         if lastuid != uid:
             if ofile: ofile.close()
-            ofile = open(os.path.join(dstdirname, uid + ".csv"), filemode)
+            folder = uid[-2:]
+            if not os.path.isdir(os.path.join(dstdirname, folder)):
+                os.mkdir(os.path.join(dstdirname, folder))
+            ofile = open(os.path.join(dstdirname, folder, uid + ".csv"), filemode)
         lastuid = uid
         ofile.write(line)
