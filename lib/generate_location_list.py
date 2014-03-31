@@ -5,6 +5,14 @@ import sys
 import pandas as pd
 import os
 
+
+headers = ['user_id', 'access_mode_id', 'logic_area_name', 'lac', 'ci',
+           'longitude', 'latitude', 'busi_name', 'busi_type_name',
+           'app_name', 'app_type_name', 'start_time',
+           'up_pack', 'down_pack', 'up_flow', 'down_flow', 'site_name',
+           'site_channel_name', 'cont_app_id', 'cont_classify_id',
+           'cont_type_id', 'acce_url']
+
 # input is a raw log
 input_file = sys.argv[1]
 
@@ -20,7 +28,7 @@ print 'From %s to %s with mode %s' % (input_file, output_file, mode)
 
 columns = ['user_id', 'location', 'start_time']
 
-df = pd.read_csv(input_file)
+df = pd.read_csv(input_file, header=None, names=headers)
 
 def loc_column(row):
     return str(row['longitude']) + ' ' + str(row['latitude'])
