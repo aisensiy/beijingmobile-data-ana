@@ -5,14 +5,8 @@ import sys
 import pandas as pd
 import os
 import glob
-
-
-headers = ['user_id', 'access_mode_id', 'logic_area_name', 'lac', 'ci',
-           'longitude', 'latitude', 'busi_name', 'busi_type_name',
-           'app_name', 'app_type_name', 'start_time',
-           'up_pack', 'down_pack', 'up_flow', 'down_flow', 'site_name',
-           'site_channel_name', 'cont_app_id', 'cont_classify_id',
-           'cont_type_id', 'acce_url']
+from constants import log_headers as headers
+from constants import locallist_headers
 
 # input is a raw log
 input_file = sys.argv[1]
@@ -57,7 +51,7 @@ def generate_locationlist(inputfile, outputfile, mode):
 
     result['locations'] = result.apply(zip_two_col_and_rm_duplicates, axis=1)
     result['location_size'] = result['locations'].map(lambda x: len(x.split(',')))
-    result = result[['user_id', 'locations', 'location_size']]
+    result = result[locallist_headers]
     result.to_csv(outputfile, index=None, encoding='utf8', mode=mode, header=None)
 
 if __name__ == '__main__':
