@@ -9,3 +9,21 @@ log_headers = ['user_id', 'access_mode_id', 'logic_area_name', 'lac', 'ci',
            'cont_type_id', 'acce_url']
 
 locallist_headers = ['user_id', 'locations', 'location_size']
+
+db = {}
+db['dev'] = {
+        'host': 'localhost',
+        'user': 'root',
+        'passwd': '000000',
+        'port': 3306,
+        'charset': 'utf8',
+        'db': 'chinamobile'
+        }
+db['product'] = {
+        'host': 'localhost',
+        'user': 'root',
+        'passwd': '000000',
+        'port': 3306,
+        'charset': 'utf8',
+        'db': 'chinamobile'
+        }
