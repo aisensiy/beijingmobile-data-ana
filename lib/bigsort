@@ -1,0 +1,10 @@
+inputfile=$1
+split -l 1000000 $1 $1-
+
+for f in $(ls $1-*); do
+    sort $f --numeric-sort --field-separator=, --key=1 --buffer-size=2G --output=$f
+done
+
+sort --numeric-sort --merge $1-* --output=$1
+
+rm $1-*
