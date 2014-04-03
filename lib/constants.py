@@ -8,7 +8,7 @@ log_headers = ['user_id', 'access_mode_id', 'logic_area_name', 'lac', 'ci',
            'site_channel_name', 'cont_app_id', 'cont_classify_id',
            'cont_type_id', 'acce_url']
 
-locallist_headers = ['user_id', 'locations', 'location_size']
+locallist_headers = ['user_id', 'locations', 'location_size', 'date']
 
 db = {}
 db['dev'] = {

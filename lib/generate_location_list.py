@@ -33,6 +33,7 @@ def generate_locationlist(inputfile, outputfile, mode):
 
     # sort by user_id and start_time
     df = df.sort_index(by=['user_id', 'start_time'])
+    currentdatetime = pd.to_datetime(df.ix[0]['start_time']).to_datetime()
 
     grouped = df.groupby('user_id')
 
@@ -51,6 +52,7 @@ def generate_locationlist(inputfile, outputfile, mode):
 
     result['locations'] = result.apply(zip_two_col_and_rm_duplicates, axis=1)
     result['location_size'] = result['locations'].map(lambda x: len(x.split(',')))
+    result['date'] = currentdatetime.strftime('%Y-%m-%d')
     result = result[locallist_headers]
     result.to_csv(outputfile, index=None, encoding='utf8', mode=mode, header=None)
 
