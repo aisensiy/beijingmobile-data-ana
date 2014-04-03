@@ -2,9 +2,9 @@ inputfile=$1
 split -l 1000000 $1 $1-
 
 for f in $(ls $1-*); do
-    sort $f --numeric-sort --field-separator=, --key=1 --buffer-size=2G --output=$f
+    sort $f --numeric-sort --field-separator=, --key=1 --buffer-size=2G --output=$f --parallel=2
 done
 
-sort --numeric-sort --merge $1-* --output=$1
+sort --numeric-sort --merge $1-* --output=$1 --parallel=2
 
 rm $1-*
