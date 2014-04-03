@@ -12,8 +12,14 @@ def generate_locationlist(inputfile, outputfile, mode):
     print 'From %s to %s with mode %s' % (inputfile, outputfile, mode)
     df = pd.read_csv(inputfile, header=None, names=headers)
 
+    def format_float(col):
+        return "%.4f" % col
+
+    df['longitude'] = df['longitude'].apply(format_float)
+    df['latitude'] = df['latitude'].apply(format_float)
+
     def loc_column(row):
-        return str(row['longitude']) + ' ' + str(row['latitude'])
+        return row['longitude'] + ' ' + row['latitude']
 
     df['location'] = df.apply(loc_column, axis=1)
 
