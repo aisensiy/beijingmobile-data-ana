@@ -1,29 +1,17 @@
 #-*- coding: utf8 -*-
 
 import common
-import sys
 import pandas as pd
 import os
-import glob
 from constants import log_headers as headers
 from constants import locallist_headers
-
-# input is a raw log
-input_file = sys.argv[1]
-
-# output is a user list with locations order by time
-if len(sys.argv) >= 3 and len(sys.argv[2]) > 0:
-    output_file = sys.argv[2]
-    mode = "a"
-else:
-    output_file = common.add_postfix(input_file, 'location_list')
-    mode = "w"
 
 columns = ['user_id', 'location', 'start_time']
 
 def generate_locationlist(inputfile, outputfile, mode):
     print 'From %s to %s with mode %s' % (inputfile, outputfile, mode)
     df = pd.read_csv(inputfile, header=None, names=headers)
+
     def loc_column(row):
         return str(row['longitude']) + ' ' + str(row['latitude'])
 
@@ -31,9 +19,11 @@ def generate_locationlist(inputfile, outputfile, mode):
 
     df = df[columns]
 
+    # pick the date
+    currentdatetime = pd.to_datetime(df.ix[0]['start_time']).to_datetime()
+
     # sort by user_id and start_time
     df = df.sort_index(by=['user_id', 'start_time'])
-    currentdatetime = pd.to_datetime(df.ix[0]['start_time']).to_datetime()
 
     grouped = df.groupby('user_id')
 
@@ -57,6 +47,20 @@ def generate_locationlist(inputfile, outputfile, mode):
     result.to_csv(outputfile, index=None, encoding='utf8', mode=mode, header=None)
 
 if __name__ == '__main__':
+    import sys
+    import glob
+
+    # input is a raw log
+    input_file = sys.argv[1]
+
+    # output is a user list with locations order by time
+    if len(sys.argv) >= 3 and len(sys.argv[2]) > 0:
+        output_file = sys.argv[2]
+        mode = "a"
+    else:
+        output_file = common.add_postfix(input_file, 'location_list')
+        mode = "w"
+
     if os.path.isdir(input_file):
         files = glob.glob(os.path.join(input_file, '*', '*.csv'))
         for csvfile in files:
