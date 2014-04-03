@@ -5,12 +5,25 @@ import pandas as pd
 import os
 from constants import log_headers as headers
 from constants import locallist_headers
+from datetime import datetime
+import logging
+
+logging.basicConfig(level=logging.INFO)
 
 columns = ['user_id', 'location', 'start_time']
 
 def generate_locationlist(inputfile, outputfile, mode):
-    print 'From %s to %s with mode %s' % (inputfile, outputfile, mode)
-    df = pd.read_csv(inputfile, header=None, names=headers)
+    logging.info('From %s to %s with mode %s', inputfile, outputfile, mode)
+    df = pd.read_csv(inputfile, header=None, names=headers,
+            dtype={'start_time': str})
+
+    # drop null values on longitude latitude and start_time
+    df = df[df.longitude.notnull() & df.latitude.notnull() & df.start_time.notnull()]
+    if len(df) == 0:
+        logging.info('no valid record in %s', inputfile)
+        return
+
+    df = df.drop_duplicates()
 
     def format_float(col):
         return "%.4f" % col
@@ -24,9 +37,6 @@ def generate_locationlist(inputfile, outputfile, mode):
     df['location'] = df.apply(loc_column, axis=1)
 
     df = df[columns]
-
-    # pick the date
-    currentdatetime = pd.to_datetime(df.ix[0]['start_time']).to_datetime()
 
     # sort by user_id and start_time
     df = df.sort_index(by=['user_id', 'start_time'])
@@ -48,7 +58,7 @@ def generate_locationlist(inputfile, outputfile, mode):
 
     result['locations'] = result.apply(zip_two_col_and_rm_duplicates, axis=1)
     result['location_size'] = result['locations'].map(lambda x: len(x.split(',')))
-    result['date'] = currentdatetime.strftime('%Y-%m-%d')
+    result['date'] = '2012-12-01'
     result = result[locallist_headers]
     result.to_csv(outputfile, index=None, encoding='utf8', mode=mode, header=None)
 
