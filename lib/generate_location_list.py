@@ -30,16 +30,14 @@ def generate_locationlist(inputfile, outputfile, mode):
 
     df['longitude'] = df['longitude'].apply(format_float)
     df['latitude'] = df['latitude'].apply(format_float)
-
-    def loc_column(row):
-        return row['longitude'] + ' ' + row['latitude']
-
-    df['location'] = df.apply(loc_column, axis=1)
+    df['location'] = df['longitude'] + ' ' + df['latitude']
 
     df = df[columns]
 
     # sort by user_id and start_time
     df = df.sort_index(by=['user_id', 'start_time'])
+    # 重置索引 索引再次成为 1 2 3 4 ...
+    df = df.reset_index()
 
     grouped = df.groupby('user_id')
 
@@ -51,9 +49,10 @@ def generate_locationlist(inputfile, outputfile, mode):
         locations = zip(row['start_time'], row['location'])
         newlocations = []
         for start_time, location in locations:
-            if len(newlocations) == 0 or newlocations[-1][1] != location:
+            if len(newlocations) == 0:
                 newlocations.append((start_time, location))
-        newlocations.sort()
+            elif newlocations[-1][1] != location:
+                newlocations.append((start_time, location))
         return ','.join(["%s:%s" % (time, loc) for time, loc in newlocations])
 
     result['locations'] = result.apply(zip_two_col_and_rm_duplicates, axis=1)
@@ -82,5 +81,5 @@ if __name__ == '__main__':
         for csvfile in files:
             generate_locationlist(csvfile, output_file, mode)
     else:
-        generate_locationlist(input_file, output_file)
+        generate_locationlist(input_file, output_file, mode)
 
