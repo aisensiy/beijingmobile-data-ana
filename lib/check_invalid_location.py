@@ -6,7 +6,7 @@ import glob
 import os
 from numpy import sin, cos, sqrt, arctan2, radians
 from datetime import datetime
-from constants import location_related_header as header
+from constants import merged_location_related_header as header
 
 
 def dateparser(datetime_s):
@@ -76,7 +76,7 @@ def pickout_invalid_points(filename):
     df.start_time = df.start_time.map(lambda x: x.strftime('%Y%m%d%H%M%S'))
     del df['point']
 
-    return df2, invalid_locations
+    return df, invalid_locations
 
 if __name__ == '__main__':
     import sys

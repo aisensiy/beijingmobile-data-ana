@@ -17,6 +17,9 @@ locallist_headers = ['user_id', 'locations', 'location_size', 'date']
 location_related_header = ['user_id', 'lac', 'longitude', 'latitude',
                             'start_time']
 
+merged_location_related_header = ['user_id', 'lac', 'longitude',
+                                 'latitude', 'start_time', 'type']
+
 db = {}
 db['dev'] = {
         'host': 'localhost',
