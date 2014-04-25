@@ -3,7 +3,7 @@
 import common
 import pandas as pd
 import os
-from constants import log_headers as headers
+from constants import location_related_header as headers
 from constants import locallist_headers
 from datetime import datetime
 import logging

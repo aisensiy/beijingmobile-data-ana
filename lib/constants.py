@@ -14,6 +14,9 @@ call_headers = ['user_id', 'target_id', 'start_time',
 
 locallist_headers = ['user_id', 'locations', 'location_size', 'date']
 
+location_related_header = ['user_id', 'lac', 'longitude', 'latitude',
+                            'start_time']
+
 db = {}
 db['dev'] = {
         'host': 'localhost',
