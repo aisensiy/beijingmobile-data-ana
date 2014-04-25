@@ -15,7 +15,7 @@ def dateparser(datetime_s):
 
 def cal_est_distance(lon1, lat1, lon2, lat2):
     rate = 97
-    return rate * np.sqrt((lon1 - lon2) ** 2 + (lat1 - lat2) ** 2)
+    return rate * np.sqrt((lon1 - lon2) ** 2 + (lat1 - lat2) ** 2) * 1.4
 
 
 def cal_distance(lon1, lat1, lon2, lat2):
@@ -55,7 +55,7 @@ def pickout_invalid_points(filename):
         x2 = df2.ix[i, 'longitude']
         y2 = df2.ix[i, 'latitude']
 
-        df2.ix[i, 'distance'] = cal_distance(x1, y1, x2, y2)
+        df2.ix[i, 'distance'] = cal_est_distance(x1, y1, x2, y2)
         df2.ix[i, 'time'] = df2.ix[i, 'start_time'] - df2.ix[i - 1, 'start_time']
         # 做一个平滑，为所有的时间间隔都加两分钟
         df2.ix[i, 'speed'] = \
