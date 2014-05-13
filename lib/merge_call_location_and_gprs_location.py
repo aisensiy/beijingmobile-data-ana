@@ -14,7 +14,7 @@ def date_range(date):
     return ['%s 00:00:00' % date, '%s 23:59:59' % date]
 
 
-def mergecsv(gprsfilename, callfilename, date):
+def preparegprsdf(gprsfilename):
     gprs_df = pd.read_csv(gprsfilename, header=None,
                           names=location_related_header,
                           dtype={'start_time': str})
@@ -23,6 +23,10 @@ def mergecsv(gprsfilename, callfilename, date):
                       gprs_df.start_time.notnull()]
     gprs_df['type'] = 0
 
+    return gprs_df
+
+
+def preparecalldf(callfilename, date):
     call_df = pd.read_csv(callfilename, header=None, names=call_headers,
                           parse_dates=['start_time'])
 
@@ -44,6 +48,13 @@ def mergecsv(gprsfilename, callfilename, date):
 
     call_df = call_df[location_related_header]
     call_df['type'] = 1
+
+    return call_df
+
+
+def mergecsv(gprsfilename, callfilename, date):
+    gprs_df = preparegprsdf(gprsfilename)
+    call_df = preparecalldf(callfilename, date)
 
     df = pd.concat([call_df, gprs_df], ignore_index=True)
     df = df.sort_index(by='start_time')
@@ -73,13 +84,17 @@ if __name__ == '__main__':
 
         targetfiledir = os.path.join(targetdir, uid[-2:])
 
+        # 不重复生成合并文件
         if os.path.isdir(os.path.join(targetfiledir, uid + '.csv')):
             continue
 
+        if os.path.isfile(callfile) and os.path.isfile(gprsfile):
+            df = mergecsv(gprsfile, callfile, date)
         if not os.path.isfile(callfile):
-            continue
+            df = preparegprsdf(gprsfile)
+        elif not os.path.isfile(gprsfile):
+            df = preparecalldf(callfile, date)
 
-        df = mergecsv(gprsfile, callfile, date)
         if not os.path.isdir(targetfiledir):
             os.mkdir(targetfiledir)
 
