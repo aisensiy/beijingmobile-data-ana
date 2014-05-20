@@ -96,6 +96,9 @@ if __name__ == '__main__':
         if not os.path.isdir(dstdir):
             os.mkdir(dstdir)
 
+        if os.path.isfile(os.path.join(dstdir, uid + '.csv')):
+            continue
+
         df, invalid_locations = pickout_invalid_points(csvfile)
         df.to_csv(os.path.join(dstdir, uid + '.csv'), header=None, index=None)
         with open(os.path.join(dstdir, uid + '.point'), 'w') as ofile:
